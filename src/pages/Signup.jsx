@@ -2,24 +2,22 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import React, { useEffect, useState } from "react";
 import { NavLink, NavLink as ReactLink, useNavigate } from "react-router-dom";
-//import ReCAPTCHA from "react-google-recaptcha";
 import TextField from "@mui/material/TextField";
 import RotateRightIcon from "@mui/icons-material/RotateRight";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  //const [verified, setVerified] = useState(false);
   const [formVerified, setFormVerified] = useState(false);
   const [captcha, setCaptcha] = useState("");
   const [url, setUrl] = useState("");
   const [refresh, setRefresh] = useState(false);
   const navigate = useNavigate();
+  const [random, setRandom] = useState(0);
 
-  // function onChange(value) {
-  //   //console.log("Captcha value:", value);
-  //   setVerified(true);
-  // }
+  const randomNumberInRange = (min, max) => {
+    return Math.floor(Math.random()*(max-min+1)) + min;
+  };
 
   useEffect(() => {
     if (email.length && password.length && captcha.length) {
@@ -28,8 +26,10 @@ const Signup = () => {
   }, [email, password, captcha]);
 
   useEffect(() => {
+    const randNum =randomNumberInRange(1,5000);
+    setRandom(randNum);
     const getImage = async () => {
-      const response = await axios.get("http://localhost:8080/users/captcha");
+      const response = await axios.get(`http://localhost:8080/users/captcha/${randNum}`);
       const imageUrl = response.data.imageUrl;
       setUrl(imageUrl);
     };
@@ -57,7 +57,7 @@ const Signup = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/users/register",
+        `http://localhost:8080/users/register/${random}`,
         {
           userName: email,
           userPassword: password,
@@ -72,7 +72,6 @@ const Signup = () => {
         toast.error("wrong captcha");
       }
     } catch (error) {
-      // Handle any API request errors
       console.error("Error during registration:", error);
       toast.error("Something went wrong");
     }
@@ -110,12 +109,6 @@ const Signup = () => {
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-
-                {/* <ReCAPTCHA
-                  sitekey="6LeekxMpAAAAAJQO-XFP-tPwnwR7Swf93F9APfOe"
-                  onChange={onChange}
-                  type="image"
-                /> */}
                 <div>
                   <div
                     style={{

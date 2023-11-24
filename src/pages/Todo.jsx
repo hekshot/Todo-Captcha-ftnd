@@ -1,30 +1,18 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../TodoList.css";
-//import UserContext from "../UserContext";
 import { useLocation } from "react-router-dom";
 
 export default function Todo() {
-  // const { userId } = useContext(UserContext);
+
   //const userId= 11;
 
   const location = useLocation();
   const userId  = location.state.userId;
-  
-
   const [task, setTask] = useState("");
   const [existingTasks, setExistingTasks] = useState([]);
   const [editingTask, setEditingTask] = useState(null);
   const [editedTaskText, setEditedTaskText] = useState("");
-
-  // const chunkSize = 3;
-  // const todoChunks = Array.from(
-  //   { length: Math.ceil(existingTasks.length / chunkSize) },
-  //   (v, i) => existingTasks.slice(i * chunkSize, i * chunkSize + chunkSize)
-  // );
-
-  //console.log("UserId:", userId);
 
   useEffect(() => {
     console.log("UserId:", userId);

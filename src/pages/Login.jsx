@@ -4,28 +4,22 @@ import { NavLink, NavLink as ReactLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import TextField from "@mui/material/TextField";
 import RotateRightIcon from "@mui/icons-material/RotateRight";
-//import ReCAPTCHA from "react-google-recaptcha";
-//import UserContext from "../UserContext";
 
-//const UserContext = createContext();
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [verified, setVerified] = useState(false);
   const [formVerified, setFormVerified] = useState(false);
   const navigate = useNavigate();
-
   const [captcha, setCaptcha] = useState("");
   const [url, setUrl] = useState("");
   const [refresh, setRefresh] = useState(false);
+  const [random, setRandom] = useState(0);
 
-  //const [tasks, setTasks] = useState([]);
-  //const [userId, setUserId] = useState([]);
 
-  // function onChange(value) {
-  //   setVerified(true);
-  // }
+  const randomNumberInRange = (min, max) => {
+    return Math.floor(Math.random()*(max-min+1)) + min;
+  };
 
   useEffect(() => {
     if (email.length && password.length && captcha.length) {
@@ -34,8 +28,10 @@ const Login = () => {
   }, [email, password, captcha]);
 
   useEffect(() => {
+    const randNum =randomNumberInRange(1,5000);
+    setRandom(randNum);
     const getImage = async () => {
-      const response = await axios.get("http://localhost:8080/users/captcha");
+      const response = await axios.get(`http://localhost:8080/users/captcha/${randNum}`);
       const imageUrl = response.data.imageUrl;
       setUrl(imageUrl);
     };
@@ -50,28 +46,25 @@ const Login = () => {
       return;
     }
     try {
-      const response = await axios.post("http://localhost:8080/users/login", {
+      const response = await axios.post(`http://localhost:8080/users/login/${random}`, {
         userName: email,
         userPassword: password,
         captcha: captcha,
       });
 
       if (response.status === 200) {
-        const userid = await response.data.userId;
-        const todoList = response.data.todoList;
-        //setTasks(todoList);
-        //setUserId(userid);
-        //console.log(userId);
-        navigate("/todos", { state: { tasks: todoList, userId: userid } });
-      } else {
+        navigate("/todos", { state: {userId: response.data.userId } });
+      } else if(response.message === "wrong"){
         toast.error("wrong captcha");
+      }else{
+        toast.error("Invalid E-mail or password");
       }
     } catch (error) {
       console.error("Error during Login:", error);
       toast.error("Something went wrong");
     }
   };
-
+  
   return (
     <div>
       <div>
@@ -104,10 +97,6 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-                {/* <ReCAPTCHA
-                    sitekey="6LeekxMpAAAAAJQO-XFP-tPwnwR7Swf93F9APfOe"
-                    onChange={onChange}
-                  /> */}
                 <div>
                   <div
                     style={{
