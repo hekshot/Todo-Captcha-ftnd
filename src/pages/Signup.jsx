@@ -29,7 +29,7 @@ const Signup = () => {
   const [random, setRandom] = useState(0);
 
   const randomNumberInRange = (min, max) => {
-    return Math.floor(Math.random()*(max-min+1)) + min;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
   useEffect(() => {
@@ -39,10 +39,12 @@ const Signup = () => {
   }, [email, password, captcha]);
 
   useEffect(() => {
-    const randNum =randomNumberInRange(1,5000);
+    const randNum = randomNumberInRange(1, 5000);
     setRandom(randNum);
     const getImage = async () => {
-      const response = await axios.get(`http://localhost:8080/users/captcha/${randNum}`);
+      const response = await axios.get(
+        `http://localhost:8080/users/captcha/${randNum}`
+      );
       const imageUrl = response.data.imageUrl;
       setUrl(imageUrl);
     };
@@ -91,96 +93,6 @@ const Signup = () => {
   };
 
   return (
-    // <div>
-    //   <div className="container">
-    //     <div className="row mt-4">
-    //       <div className="col-sm" style={{ width: "50%", margin: "0 auto" }}>
-    //         <div style={{ backgroundColor: "dark", color: "white" }}>
-    //           <h3>Register here!!</h3>
-    //         </div>
-    //         <div>
-    //           <form>
-    //             <div className="form-group">
-    //               <label htmlFor="email"> Enter your email</label>
-    //               <input
-    //                 type="text"
-    //                 placeholder="Enter email"
-    //                 id="email"
-    //                 className="form-control"
-    //                 value={email}
-    //                 onChange={(e) => setEmail(e.target.value)}
-    //               />
-    //             </div>
-    //             <div className="form-group">
-    //               <label htmlFor="password"> Enter your password</label>
-    //               <input
-    //                 type="password"
-    //                 placeholder="Enter password"
-    //                 id="password"
-    //                 className="form-control"
-    //                 value={password}
-    //                 onChange={(e) => setPassword(e.target.value)}
-    //               />
-    //             </div>
-    //             <div>
-    //               <div
-    //                 style={{
-    //                   display: "flex",
-    //                   alignItems: "center",
-    //                   gap: "1rem",
-    //                 }}
-    //               >
-    //                 <TextField
-    //                   required
-    //                   margin="normal"
-    //                   fullWidth
-    //                   name="captcha"
-    //                   label="Enter captcha"
-    //                   type="text"
-    //                   id="captcha"
-    //                   onChange={(e) => {
-    //                     setCaptcha(e.target.value);
-    //                   }}
-    //                 />
-    //                 <img
-    //                   src={`data:image/png;base64,${url}`}
-    //                   alt="captcha"
-    //                   height="50rem"
-    //                   width="150rem"
-    //                   style={{ borderRadius: "1rem", marginTop: "0.6rem" }}
-    //                 />
-    //                 <RotateRightIcon
-    //                   onClick={() => setRefresh(!refresh)}
-    //                   style={{ marginTop: "0.6rem", fontSize: "2.5rem" }}
-    //                 />
-    //               </div>
-    //             </div>
-    //             <div className="text-center">
-    //               <button
-    //                 style={{
-    //                   outline: "none",
-    //                   color: "white",
-    //                   backgroundColor: "light",
-    //                 }}
-    //                 onClick={signUpToAccount}
-    //                 disabled={!formVerified}
-    //               >
-    //                 SignUp
-    //               </button>
-    //             </div>
-    //             <p className="mt-3 text-center">
-    //               Already have an account?{" "}
-    //               <NavLink tag={ReactLink} to="/login">
-    //                 Log In
-    //               </NavLink>
-    //             </p>
-    //           </form>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
-
     <Container>
       <Row className="mt-4">
         <Col sm={{ size: 4, offset: 4 }}>
@@ -253,7 +165,7 @@ const Signup = () => {
                   </Button>
                 </Container>
                 <p className="mt-3 text-center">
-                Already have an account?{" "}
+                  Already have an account?{" "}
                   <NavLink tag={ReactLink} to="/login">
                     Log In
                   </NavLink>
